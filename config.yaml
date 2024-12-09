@@ -1,0 +1,14 @@
+work_hours:
+  start_time: "09:00"
+  end_time: "18:00"
+
+progress_bar:
+  height: 2
+  completed_color: "green"
+  uncompleted_color: "gray"
+
+# Optional: Add lunch break or other non-work periods
+breaks:
+  - start: "12:00"
+    end: "13:00"
+    exclude_from_progress: true
