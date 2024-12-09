@@ -28,14 +28,35 @@ class WorkProgressBar:
         self.update_progress()
         
     def load_config(self, config_path):
-        # Ensure config path is absolute
+        # 检查配置文件是否存在，不存在则创建默认配置
         config_path = os.path.abspath(config_path)
         
-        # Load configuration from YAML
+        if not os.path.exists(config_path):
+            # 创建默认配置
+            default_config = {
+                'work_hours': {
+                    'start_time': '09:00',
+                    'end_time': '18:00'
+                },
+                'progress_bar': {
+                    'height': 10,
+                    'completed_color': 'green',
+                    'uncompleted_color': 'gray'
+                }
+            }
+            
+            # 确保目录存在
+            os.makedirs(os.path.dirname(config_path), exist_ok=True)
+            
+            # 写入默认配置文件
+            with open(config_path, 'w') as file:
+                yaml.dump(default_config, file, default_flow_style=False)
+        
+        # 加载配置文件
         with open(config_path, 'r') as file:
             self.config = yaml.safe_load(file)
         
-        # Convert time strings to time objects
+        # 转换时间字符串为时间对象
         self.work_start_time = datetime.strptime(
             self.config['work_hours']['start_time'], "%H:%M").time()
         self.work_end_time = datetime.strptime(

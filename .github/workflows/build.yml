@@ -27,7 +27,7 @@ jobs:
     
     - name: Build Executable
       run: |
-        pyinstaller --onefile --windowed --add-data "config.yaml;." progress_bar.py
+        pyinstaller --onefile --windowed --add-data "config.yaml;." --add-data "config.yaml;config.yaml" progress_bar.py
     
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
