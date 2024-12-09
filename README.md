@@ -20,7 +20,7 @@ work_hours:
 
 progress_bar:
   height: 2            # 进度条高度（像素）
-  completed_color: "green"     # 已完成部分颜色
+  completed_color: "lime"     # 已完成部分颜色
   uncompleted_color: "gray"    # 未完成部分颜色
 
 breaks:

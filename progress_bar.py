@@ -60,7 +60,7 @@ class WorkProgressBar:
                 },
                 'progress_bar': {
                     'height': 2,
-                    'completed_color': 'green',
+                    'completed_color': 'lime',
                     'uncompleted_color': 'gray'
                 }
             }
