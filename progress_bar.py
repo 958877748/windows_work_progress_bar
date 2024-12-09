@@ -55,11 +55,11 @@ class WorkProgressBar:
             # 创建默认配置
             default_config = {
                 'work_hours': {
-                    'start_time': '09:00',
-                    'end_time': '18:00'
+                    'start_time': '09:30',
+                    'end_time': '18:30'
                 },
                 'progress_bar': {
-                    'height': 10,
+                    'height': 2,
                     'completed_color': 'green',
                     'uncompleted_color': 'gray'
                 }
