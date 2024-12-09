@@ -2,6 +2,7 @@ import tkinter as tk
 import yaml
 from datetime import datetime, time, timedelta
 import os
+import sys
 
 class WorkProgressBar:
     def __init__(self, config_path='config.yaml'):
@@ -28,10 +29,29 @@ class WorkProgressBar:
         self.update_progress()
         
     def load_config(self, config_path):
-        # 检查配置文件是否存在，不存在则创建默认配置
-        config_path = os.path.abspath(config_path)
+        # 尝试多个配置文件路径
+        possible_paths = [
+            config_path,  # 原始路径
+            os.path.join(os.path.dirname(sys.executable), 'config.yaml'),  # 可执行文件目录
+            os.path.join(os.path.expanduser('~'), '.work_progress_bar', 'config.yaml'),  # 用户目录
+            os.path.join(os.getcwd(), 'config.yaml')  # 当前工作目录
+        ]
         
-        if not os.path.exists(config_path):
+        # 查找存在的配置文件
+        existing_config = None
+        for path in possible_paths:
+            if os.path.exists(path):
+                existing_config = path
+                break
+        
+        # 如果没有找到配置文件，创建默认配置
+        if existing_config is None:
+            # 选择一个默认保存路径
+            existing_config = os.path.join(os.path.expanduser('~'), '.work_progress_bar', 'config.yaml')
+            
+            # 确保目录存在
+            os.makedirs(os.path.dirname(existing_config), exist_ok=True)
+            
             # 创建默认配置
             default_config = {
                 'work_hours': {
@@ -45,15 +65,12 @@ class WorkProgressBar:
                 }
             }
             
-            # 确保目录存在
-            os.makedirs(os.path.dirname(config_path), exist_ok=True)
-            
             # 写入默认配置文件
-            with open(config_path, 'w') as file:
+            with open(existing_config, 'w') as file:
                 yaml.dump(default_config, file, default_flow_style=False)
         
         # 加载配置文件
-        with open(config_path, 'r') as file:
+        with open(existing_config, 'r') as file:
             self.config = yaml.safe_load(file)
         
         # 转换时间字符串为时间对象
