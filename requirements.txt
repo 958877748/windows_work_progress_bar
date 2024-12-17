@@ -1,1 +1,4 @@
-PyYAML
+tkinter
+pyyaml
+pystray
+Pillow

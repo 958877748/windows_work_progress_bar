@@ -3,6 +3,8 @@ import yaml
 from datetime import datetime, time, timedelta
 import os
 import sys
+import pystray
+from PIL import Image, ImageDraw
 
 class WorkProgressBar:
     def __init__(self, config_path='config.yaml'):
@@ -24,6 +26,9 @@ class WorkProgressBar:
                                 height=self.config['progress_bar']['height'], 
                                 bg='white', highlightthickness=0)
         self.canvas.pack()
+        
+        # Create system tray icon
+        self.create_system_tray_icon()
         
         # Update progress periodically
         self.update_progress()
@@ -79,6 +84,36 @@ class WorkProgressBar:
         self.work_end_time = datetime.strptime(
             self.config['work_hours']['end_time'], "%H:%M").time()
         
+    def create_system_tray_icon(self):
+        # Create a small icon for the system tray
+        width, height = 64, 64
+        image = Image.new('RGBA', (width, height), (255, 255, 255, 0))
+        dc = ImageDraw.Draw(image)
+        dc.rectangle((0, 0, width, height), fill=(128, 128, 128, 180))
+        dc.text((10, 10), "WPB", fill=(255, 255, 255, 255))
+
+        # Create system tray icon
+        self.icon = pystray.Icon("Work Progress Bar", image, 
+                                 menu=pystray.Menu(
+                                     pystray.MenuItem('Exit', self.exit_application)
+                                 ))
+        
+        # Start the system tray icon in a separate thread
+        import threading
+        threading.Thread(target=self.icon.run, daemon=True).start()
+
+    def exit_application(self):
+        # Stop the system tray icon
+        if hasattr(self, 'icon'):
+            self.icon.stop()
+        
+        # Destroy the Tkinter root window
+        if hasattr(self, 'root'):
+            self.root.quit()
+        
+        # Exit the application
+        sys.exit(0)
+
     def calculate_progress(self):
         now = datetime.now().time()
         
